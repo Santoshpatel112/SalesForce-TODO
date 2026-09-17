@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Interactive Todo Manager Lightning Component Tab</description>
+    <label>Todo Manager</label>
+    <lwcComponent>todoManeger</lwcComponent>
+    <motif>Custom83: Pencil</motif>
+</CustomTab>

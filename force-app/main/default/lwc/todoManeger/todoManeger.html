@@ -1,0 +1,154 @@
+<template>
+    <div class="todo-app-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading tasks" size="medium" variant="brand"></lightning-spinner>
+        </template>
+
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="live-time">{time}</div>
+                <div class="greeting-text">{greeting} 👋</div>
+            </div>
+            <div class="header-right">
+                <div class="task-stats-badge">
+                    <span class="stat-item">
+                        <span class="stat-count">{upcomingCount}</span> Upcoming
+                    </span>
+                    <span class="stat-divider">|</span>
+                    <span class="stat-item">
+                        <span class="stat-count success">{completedCount}</span> Done
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Input / Focus Section -->
+        <section class="task-input-section">
+            <h2 class="section-title">What is your main focus for today?</h2>
+            <div class="input-row">
+                <lightning-input
+                    type="text"
+                    variant="label-hidden"
+                    placeholder="Add a new task..."
+                    value={newTaskTitle}
+                    onchange={handleInputChange}
+                    onkeyup={handleKeyUp}
+                    class="task-input-field">
+                </lightning-input>
+                <lightning-button
+                    variant="brand"
+                    label="Add Task"
+                    icon-name="utility:add"
+                    onclick={handleAddTodo}
+                    class="add-task-btn">
+                </lightning-button>
+            </div>
+        </section>
+
+        <!-- Task Columns / Lists -->
+        <div class="task-lists-grid">
+            <!-- Upcoming Tasks Column -->
+            <div class="task-column upcoming-column">
+                <div class="column-header">
+                    <h3 class="column-title">
+                        <lightning-icon icon-name="utility:clock" size="x-small" class="slds-m-right_xx-small icon-upcoming"></lightning-icon>
+                        Upcoming Tasks
+                    </h3>
+                    <span class="badge badge-upcoming">{upcomingCount}</span>
+                </div>
+
+                <div class="task-list">
+                    <template if:true={hasUpcomingTasks}>
+                        <template for:each={upcomingTasksList} for:item="todo">
+                            <div class="task-item-card upcoming-card" key={todo.Id}>
+                                <div class="task-content">
+                                    <span class="task-name">{todo.Name}</span>
+                                </div>
+                                <div class="task-actions">
+                                    <lightning-button-icon
+                                        icon-name="utility:check"
+                                        variant="border-filled"
+                                        size="small"
+                                        data-id={todo.Id}
+                                        onclick={handleMarkCompleted}
+                                        title="Mark as completed"
+                                        class="action-btn check-btn">
+                                    </lightning-button-icon>
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="border-filled"
+                                        size="small"
+                                        data-id={todo.Id}
+                                        onclick={handleDelete}
+                                        title="Delete Task"
+                                        class="action-btn delete-btn">
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template if:false={hasUpcomingTasks}>
+                        <div class="empty-placeholder">
+                            <lightning-icon icon-name="utility:task" size="medium" class="empty-icon"></lightning-icon>
+                            <p class="empty-title">All caught up!</p>
+                            <p class="empty-subtitle">No upcoming tasks. Add one above.</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Completed Tasks Column -->
+            <div class="task-column completed-column">
+                <div class="column-header">
+                    <h3 class="column-title">
+                        <lightning-icon icon-name="utility:success" size="x-small" class="slds-m-right_xx-small icon-completed"></lightning-icon>
+                        Completed Tasks
+                    </h3>
+                    <span class="badge badge-completed">{completedCount}</span>
+                </div>
+
+                <div class="task-list">
+                    <template if:true={hasCompletedTasks}>
+                        <template for:each={completedTasksList} for:item="todo">
+                            <div class="task-item-card completed-card" key={todo.Id}>
+                                <div class="task-content">
+                                    <span class="task-name task-completed-text">{todo.Name}</span>
+                                </div>
+                                <div class="task-actions">
+                                    <lightning-button-icon
+                                        icon-name="utility:undo"
+                                        variant="border-filled"
+                                        size="small"
+                                        data-id={todo.Id}
+                                        onclick={handleMarkUpcoming}
+                                        title="Move back to upcoming"
+                                        class="action-btn undo-btn">
+                                    </lightning-button-icon>
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="border-filled"
+                                        size="small"
+                                        data-id={todo.Id}
+                                        onclick={handleDelete}
+                                        title="Delete Task"
+                                        class="action-btn delete-btn">
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template if:false={hasCompletedTasks}>
+                        <div class="empty-placeholder">
+                            <lightning-icon icon-name="utility:all" size="medium" class="empty-icon"></lightning-icon>
+                            <p class="empty-title">No completed tasks yet</p>
+                            <p class="empty-subtitle">Complete tasks to see them tracked here.</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
